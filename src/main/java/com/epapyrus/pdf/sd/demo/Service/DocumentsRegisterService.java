@@ -54,7 +54,6 @@ public class DocumentsRegisterService {
         ObjectMapper mapper = new ObjectMapper();
         String s = mapper.writeValueAsString(response.getBody());
         SampleDto tomcatDto = mapper.readValue(s, SampleDto.class); // json 객체에서 StreamDocsId만 가지고 오기
-        System.out.println(tomcatDto); // Response 데이터
 
         return tomcatDto.getStreamdocsId();
     }
