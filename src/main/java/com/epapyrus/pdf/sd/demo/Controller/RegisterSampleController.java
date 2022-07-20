@@ -6,14 +6,14 @@ import com.epapyrus.pdf.sd.demo.Service.DocumentsRegisterService;
 import com.epapyrus.pdf.sd.demo.Service.URLRegisterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.apache.http.HttpResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "sample")
 @Slf4j
@@ -24,18 +24,20 @@ public class RegisterSampleController {
 
     //url로 등록하기
     @PostMapping("/external-resources")
-    public String URLRegister(@RequestBody Requestfilepath body, Model model) {
-        String streamdocsId = urlRegisterService.RegisterExtResources(body.getExternalResource());
-        model.addAttribute("streamdocsId",streamdocsId); //index.jsp에 데이터 보내주기
-        return "index";
+    public void URLRegister(@RequestBody Requestfilepath body, HttpServletResponse response) throws IOException {
+        String streamdocId = urlRegisterService.RegisterExtResources(body.getExternalResource());
+        String url = "http://localhost:8080/sample/watermark?streamdocsId=" + streamdocId;
+        System.out.println("url = " + url);
+        response.sendRedirect(url);
     }
 
-    //Body에 파일담아서 등록하기
+    //MultipartFile로 등록하기
     @PostMapping("/documents")
-    public String FileRegister(@RequestParam MultipartFile pdf, Model model) throws IOException {
-        String streamdocsId = documentsRegisterService.Resiterdocuments(pdf);
-        model.addAttribute("streamdocsId",streamdocsId); //index.jsp에 데이터 보내주기
-        return "index";
+    public void FileRegister(@RequestParam MultipartFile pdf, HttpServletResponse response) throws IOException {
+        String streamdocId = documentsRegisterService.Resiterdocuments(pdf);
+        String url = "http://localhost:8080/sample/watermark?streamdocsId=" + streamdocId;
+        System.out.println("url = " + url);
+        response.sendRedirect(url);
     }
 
 }

@@ -24,7 +24,6 @@ public class DocumentsRegisterService {
         String serverApi = "/streamdocs/v4/documents";
         String request = server + serverApi;
 
-
         //header 만들기
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -32,16 +31,16 @@ public class DocumentsRegisterService {
         //body 만들기
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("pdf", new MultipartInputStreamFileResource(file.getInputStream(), file.getOriginalFilename()));
-        body.add("lifespan", "10m");
-        body.add("expiredAt", "10000");
-        body.add("name", "sample.jpg");                //다운로드 될 때 설정되는 파일명
-        body.add("docName", "test.pdf");               //관리자 페이지에서 보여지는 문서명
-        body.add("category", "pppppppp");
-        body.add("description", "test1111");
-        body.add("externalId", "33333");
-        body.add("password", "4321");
-        body.add("maxCount", "11");                    //열람 횟수 설정
-        body.add("openedLifespan", "60000");           //열람 시간 설정
+//        body.add("lifespan", "10m");
+//        body.add("expiredAt", "10000");
+//        body.add("name", "sample.jpg");                //다운로드 될 때 설정되는 파일명
+//        body.add("docName", "test.pdf");               //관리자 페이지에서 보여지는 문서명
+//        body.add("category", "pppppppp");
+//        body.add("description", "test1111");
+//        body.add("externalId", "33333");
+//        body.add("password", "4321");
+//        body.add("maxCount", "11");                    //열람 횟수 설정
+//        body.add("openedLifespan", "60000");           //열람 시간 설정
 
         //header와 body 합치기
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
@@ -50,12 +49,12 @@ public class DocumentsRegisterService {
         RestTemplate template = new RestTemplate();
         response = template.exchange(request, HttpMethod.POST, entity, Object.class);
 
-
         ObjectMapper mapper = new ObjectMapper();
         String s = mapper.writeValueAsString(response.getBody());
-        SampleDto tomcatDto = mapper.readValue(s, SampleDto.class); // json 객체에서 StreamDocsId만 가지고 오기
+        SampleDto sampleDto = mapper.readValue(s, SampleDto.class); // json 객체에서 StreamDocsId만 가지고 오기
+        System.out.println(sampleDto); // Response 데이터
 
-        return tomcatDto.getStreamdocsId();
+        return sampleDto.getStreamdocsId();
     }
 
     //파일을 Stream 형식으로 바꾸는 class
